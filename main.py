@@ -1,16 +1,27 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import asyncio
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+from aiogram import Bot, Dispatcher
+
+from data.config import TOKEN
+from handlers.user_private import user_private_router
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+dp.include_router(user_private_router)
+
+#def chek():
+#    book = {
+#        12312 : {"game" : "https/game.com", "board_game": "https/board_game.com"},
+#        "12676890" : {"gamiks" : "https/gamikse.com", "steam": "https/steam.com"}
+#    }
+#    for i in book.get(12312).keys():
+#        print(i)
+#    print(book.get(12312).values())
+
+async def main():
+    await dp.start_polling(bot)
+
+asyncio.run(main())
