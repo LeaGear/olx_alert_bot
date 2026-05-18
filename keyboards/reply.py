@@ -14,3 +14,12 @@ start_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True,
     input_field_placeholder="Обирай контент!"
 )
+menu_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+        KeyboardButton(text = "Back to Menu!")
+        ]
+    ],
+    resize_keyboard=True,
+    input_field_placeholder="Back to Menu!"
+)
