@@ -1,14 +1,17 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
+from data.config import KEYBOARDS
+
+
 start_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text = "🗒 Мои подписки!"),
-            KeyboardButton(text = "🟢 Добавить подписку!")
+            KeyboardButton(text = KEYBOARDS["my_subscribes"]),
+            KeyboardButton(text = KEYBOARDS["add_subscribe"])
         ],
         [
-            KeyboardButton(text = "⚙️ Настройки"),
-            KeyboardButton(text = "🔴 Удалить подписку")
+            KeyboardButton(text = KEYBOARDS["properties"]),
+            KeyboardButton(text = KEYBOARDS["delete_subscribe"])
         ]
     ],
     resize_keyboard=True,
@@ -17,7 +20,7 @@ start_keyboard = ReplyKeyboardMarkup(
 menu_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-        KeyboardButton(text = "Back to Menu!")
+        KeyboardButton(text = KEYBOARDS["menu"])
         ]
     ],
     resize_keyboard=True,
