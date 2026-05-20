@@ -1,2 +1,7 @@
 
 data/.env
+data/users_subs_data.json
+
+**/__pycache__/
+*.py[cod]
+*$py.class
