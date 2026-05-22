@@ -75,7 +75,7 @@ async def add_subscribe_url(message: types.Message, state: FSMContext):
     user_data = await state.get_data()  # Get all user data from FSM
     user_id = message.from_user.id  # Getting user ID
     user_new_sub = [user_id,
-                    {"name": user_data.get("sub_name"), "url": user_data.get("sub_url")}]  # Create list with user data
+                    {"name": user_data.get("sub_name"), "url": user_data.get("sub_url"), "content" : None}]  # Create list with user data
     # print(f"user new info  -- -- - {user_new_sub}")
     # print(f"data cache while add user - - - - {await get_actual_cache()}")
     await add_subscribe(user_new_sub)
