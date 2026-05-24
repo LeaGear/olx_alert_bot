@@ -3,7 +3,7 @@ import asyncio
 import aiofiles
 import json
 
-from data.config import DATA_FILE
+from bot.data.config import DATA_FILE
 
 _data_cache = {}  # Private data cache
 _save_lock = None

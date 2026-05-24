@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from bot.storage import save_file, get_actual_cache
+from bot.logic.storage import save_file, get_actual_cache
 
 
 async def my_subscribes():

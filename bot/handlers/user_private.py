@@ -5,10 +5,10 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import LinkPreviewOptions
 
 from bot.keyboards.reply import menu_keyboard, get_keyboard, back_to_menu_keyboard
-from bot.logic import get_users_subscribe_names, get_user_subs
-from bot.main_commands import add_subscribe, delete_subscribe
+from bot.logic.logic import get_users_subscribe_names, get_user_subs
+from bot.logic.commands import add_subscribe, delete_subscribe
 from bot.data.config import KEYBOARDS
-from models.subscription import Subscription
+from server.models.subscription import Subscription
 
 user_private_router = Router()
 
@@ -25,7 +25,7 @@ class DeleteSubscribe(StatesGroup):
 # START command
 @user_private_router.message(CommandStart())
 async def start_cmd(message: types.Message):
-    await message.answer("Hi hi hi", reply_markup=menu_keyboard)
+    await message.answer("Привет, давай начнем создавать твой рай OLX уведомлений!", reply_markup=menu_keyboard)
 
 
 # MENU button
@@ -35,7 +35,7 @@ async def back_to_menu(message: types.Message, state: FSMContext):
     if current_state:
         await state.clear()
 
-    await message.answer("Main menu: ", reply_markup=menu_keyboard)
+    await message.answer("Главное меню: ", reply_markup=menu_keyboard)
 
 
 # LOOKING user subscribes button
@@ -96,9 +96,9 @@ async def delete_subs(message: types.Message, state: FSMContext):
     await state.update_data(user_subs_names=user_subs)
     await state.set_state(DeleteSubscribe.waiting_for_choice)
 
-    await message.answer("Choose group for delete!",
+    await message.answer("Какую подписку хотите удалить?",
                      reply_markup=get_keyboard(user_subs, menu_button=KEYBOARDS["menu"],
-                                                   placeholder="Choose one of you subs"))
+                                                   placeholder="Выберите одну из ваших подписок...."))
 
 
 @user_private_router.message(DeleteSubscribe.waiting_for_choice)
@@ -106,9 +106,9 @@ async def del_one_sub(message: types.Message, state: FSMContext):
     subs = await state.get_data()
     if message.text in subs["user_subs_names"]:
         await delete_subscribe(message.from_user.id, message.text)
-        await message.answer(f"Subscribe {message.text} was deleted!", reply_markup=menu_keyboard)
+        await message.answer(f"Подписка {message.text} была удалена!", reply_markup=menu_keyboard)
     else:
-        await message.answer(f"This subs do not exist!")
+        await message.answer(f"Подписки с таким именем не существует!")
 
     await state.clear()
 
@@ -122,4 +122,4 @@ async def properties(message: types.Message):
 # OTHER text from USER
 @user_private_router.message()
 async def input_error(message: types.Message):
-    await message.answer("Something went wrong!", reply_markup=menu_keyboard)
+    await message.answer("Упс... Что-то пошло не так! Назад в меню...", reply_markup=menu_keyboard)

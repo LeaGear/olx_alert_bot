@@ -5,7 +5,7 @@ import json
 import time
 
 from bs4 import BeautifulSoup
-from bot.data.config import HEADERS
+from config import HEADERS
 
 
 def save_file(data, file_name):

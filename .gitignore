@@ -1,14 +1,9 @@
 
 .env
 data_store/users_subs_data.json
-logic/data.txt
 
 **/__pycache__/
 *.py[cod]
 *$py.class
 
 .DS_Store
-
-result.json
-users.json
-users1.json

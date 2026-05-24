@@ -3,7 +3,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 
 from data.config import TOKEN
-from bot.storage import check_data_file, caching_users_data
+from bot.logic.storage import check_data_file, caching_users_data
 from bot.handlers.user_private import user_private_router
 
 
