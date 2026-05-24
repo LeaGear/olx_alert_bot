@@ -69,9 +69,7 @@ def parser(user_info):
     return user_info
 
 def main_func_parser():
-    # url = "https://www.olx.ua/uk/hobbi-otdyh-i-sport/sport-otdyh/nastolnye-igry/q-witcher-old-world/?currency=UAH&search%5Border%5D=created_at:desc"
-    url = "https://www.olx.ua/uk/hobbi-otdyh-i-sport/q-зомбицид/"
-    # url = "https://www.olx.ua/uk/list/q-samsung/?search%5Border%5D=created_at:desc"
+    #url = "https://www.olx.ua/uk/hobbi-otdyh-i-sport/q-зомбицид/"
     with open("users.json", "r", encoding="utf-8") as f:
         users = json.load(f)
 
@@ -84,15 +82,5 @@ def main_func_parser():
     save_file(users, "users1.json")
     print(users)
 
-    #print(url)
-
-    #response = httpx.get(url, headers=HEADERS)
-
-    #print(response.status_code)
-
-    #result = group_cards_from_url_response(response)
-    #save_file(result, "result.json")
-
-    #print(result)
-
-main_func_parser()
+if __name__ == "__main__":
+    main_func_parser()

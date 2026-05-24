@@ -32,13 +32,10 @@ async def save_file(data, file_name=DATA_FILE):
 
 
 def check_data_file():
-    # print("Checking data file...")
     if os.path.exists(DATA_FILE):
-        # print("Data file is exist!")
         pass
 
     else:
-        # print("Data file is not exist. Create new one!")
         with open(DATA_FILE, "w", encoding="utf-8") as f:
             f.write("{}")
 
