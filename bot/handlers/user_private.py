@@ -4,11 +4,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import LinkPreviewOptions
 
-from keyboards.reply import menu_keyboard, get_keyboard, back_to_menu_keyboard
-from logic.logic import get_users_subscribe_names, get_user_subs
-from logic.main_commands import my_subscribes, add_subscribe, delete_subscribe, properties
-from data.config import KEYBOARDS
-from logic.models import Subscription
+from bot.keyboards.reply import menu_keyboard, get_keyboard, back_to_menu_keyboard
+from bot.logic import get_users_subscribe_names, get_user_subs
+from bot.main_commands import add_subscribe, delete_subscribe
+from bot.data.config import KEYBOARDS
+from models.subscription import Subscription
 
 user_private_router = Router()
 
@@ -30,7 +30,11 @@ async def start_cmd(message: types.Message):
 
 # MENU button
 @user_private_router.message(F.text == KEYBOARDS["menu"])
-async def back_to_menu(message: types.Message):
+async def back_to_menu(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state:
+        await state.clear()
+
     await message.answer("Main menu: ", reply_markup=menu_keyboard)
 
 
@@ -93,7 +97,7 @@ async def delete_subs(message: types.Message, state: FSMContext):
     await state.set_state(DeleteSubscribe.waiting_for_choice)
 
     await message.answer("Choose group for delete!",
-                         reply_markup=get_keyboard(user_subs + [KEYBOARDS["menu"]],
+                     reply_markup=get_keyboard(user_subs, menu_button=KEYBOARDS["menu"],
                                                    placeholder="Choose one of you subs"))
 
 
