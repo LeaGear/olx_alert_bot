@@ -9,6 +9,8 @@ from bot.logic.logic import get_users_subscribe_names, get_user_subs
 from bot.logic.commands import add_subscribe, delete_subscribe
 from bot.data.config import KEYBOARDS
 from server.models.subscription import Subscription
+from bot.logic.api_client import send_subscription_to_api
+
 
 user_private_router = Router()
 
@@ -76,9 +78,9 @@ async def add_subscribe_url(message: types.Message, state: FSMContext):
 
     user_data = await state.get_data()  # Get all user data from FSM
     user_id = message.from_user.id  # Getting user ID
-    user_new_sub = Subscription(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
-    await add_subscribe(user_new_sub)
-
+    #user_new_sub = Subscription(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
+    #await add_subscribe(user_new_sub)
+    await send_subscription_to_api(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
     await message.answer(f"Добавлена подписка: \n{user_data.get('sub_name')} | {user_data.get('sub_url')}",
                          reply_markup=menu_keyboard)
     await state.clear()

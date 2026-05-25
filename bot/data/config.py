@@ -15,4 +15,8 @@ KEYBOARDS = {
     "menu": "↩️ Назад в меню"
 }
 
+BACKEND_URL = "http://127.0.0.1:8000"
 
+API_COMMANDS = {
+    "add_sub" : "/add_subscription"
+}
