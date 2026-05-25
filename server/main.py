@@ -59,6 +59,5 @@ async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)):
 
     return {
         "status": "success",
-        "message": "New subscription created successfully",
-        "subscription_id": new_sub.id
+        "detail": "add_success",
     }

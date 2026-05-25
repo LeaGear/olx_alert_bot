@@ -33,8 +33,8 @@ async def start_cmd(message: types.Message):
 # MENU button
 @user_private_router.message(F.text == KEYBOARDS["menu"])
 async def back_to_menu(message: types.Message, state: FSMContext):
-    current_state = await state.get_state()
-    if current_state:
+
+    if await state.get_state(): #If user have active state and in FSM route - clear it
         await state.clear()
 
     await message.answer("Главное меню: ", reply_markup=menu_keyboard)
@@ -74,17 +74,21 @@ async def add_subscribe_name(message: types.Message, state: FSMContext):
 @user_private_router.message(AddSubscribe.sub_url)
 async def add_subscribe_url(message: types.Message, state: FSMContext):
     await state.update_data(sub_url=message.text)
-    await message.answer("Ссылка добавлена! Подписка сохранена!")  # Add user subscribes url
+    #await message.answer("Ссылка добавлена! Подписка сохранена!")  # Add user subscribes url
 
     user_data = await state.get_data()  # Get all user data from FSM
     user_id = message.from_user.id  # Getting user ID
-    #user_new_sub = Subscription(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
-    #await add_subscribe(user_new_sub)
-    await send_subscription_to_api(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
-    await message.answer(f"Добавлена подписка: \n{user_data.get('sub_name')} | {user_data.get('sub_url')}",
-                         reply_markup=menu_keyboard)
-    await state.clear()
 
+    response_status = await send_subscription_to_api(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
+    if response_status["detail"] == "add_success":
+        await message.answer(f"Добавлена подписка: \n{user_data.get('sub_name')} | {user_data.get('sub_url')}",
+                             reply_markup=menu_keyboard)
+    elif response_status["detail"] == "invalid_data":
+        await message.answer("Подписка не добавлена так как был отправлен неправильный URL", reply_markup=menu_keyboard)
+    elif response_status["detail"] == "server_down":
+        await message.answer("Напишите додику, что сервак - мертв", reply_markup=menu_keyboard)
+    else:
+        await message.answer("Разраб обосрался - не воркает", reply_markup = menu_keyboard)
 
 # DELETE subscribe button
 @user_private_router.message(F.text == KEYBOARDS["delete_subscribe"])
