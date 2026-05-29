@@ -24,9 +24,11 @@ async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)):
 @router.get("/{telegram_id}", response_model=List[SubscriptionResponse])
 async def get_user_subscriptions(telegram_id: int, db=Depends(get_db)) -> List[SubscriptionResponse]:
     subs = await get_users_subs_service(db, telegram_id)
-    if subs is None:
+    logging.error(f"SUBS --=-=-=-=-==-=-=-=-={subs}")
+    if subs:
+        return subs
+    else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user_not_found")
-    return subs
 
 
 #WAY /subscriptions/{telegram_id}/delete/{sub_name}

@@ -2,8 +2,9 @@ import os
 
 
 TOKEN = os.getenv("TOKEN")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
 
-DATA_FILE = "data_store/users_subs_data.json"
+
 KEYBOARDS = {
     "my_subscribes": "🗒 Мои подписки",
     "add_subscribe": "🟢 Добавить подписку",
@@ -12,12 +13,13 @@ KEYBOARDS = {
     "menu": "↩️ Назад в меню"
 }
 
-BACKEND_URL = "http://127.0.0.1:8000"
+SERVER_TIMEOUT = 5
+
 
 API_VERSION = "/v1"
 
 API_COMMANDS = {
-    "add_sub" : f"{API_VERSION}/subscriptions/add",
-    "get_user_subs" : f"{API_VERSION}/subscriptions/{{}}",
-    "delete_sub" : f"{API_VERSION}/subscriptions/{{}}/delete/{{}}",
+    "add_sub" : API_VERSION + "/subscriptions/add",
+    "get_user_subs" : API_VERSION + "/subscriptions/{}",
+    "delete_sub" : API_VERSION + "subscriptions/{}/delete/{}",
 }

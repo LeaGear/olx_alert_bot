@@ -46,7 +46,7 @@ async def my_subs(message: types.Message):
     sub_list = await get_user_subs(message.from_user.id)
 
     if not sub_list.ok:
-        if sub_list.detail == Detail.SUBS_NOT_FOUND:
+        if sub_list.detail == Detail.NOT_FOUND:
             await message.answer("У вас нет ни одной подписки!")
         else:
             await message.answer("Проблемы с сервером!")
@@ -89,7 +89,7 @@ async def add_subscribe_url(message: types.Message, state: FSMContext):
     else:
         if response_status.detail == Detail.INVALID_DATA:
             await message.answer("Подписка не добавлена так как был отправлен неправильный URL")
-        elif response_status.detail == Detail.SUBS_NOT_FOUND:
+        elif response_status.detail == Detail.SERVER_DOWN:
             await message.answer("Напишите додику, что сервак - мертв")
         else:
             await message.answer("Разраб обосрался - не воркает")
@@ -111,7 +111,7 @@ async def delete_sub(message: types.Message, state: FSMContext):
                              reply_markup=get_keyboard(user_subs, menu_button=KEYBOARDS["menu"],
                                                        placeholder="Выберите одну из ваших подписок...."))
     else:
-        if server_user_sub_names.detail == Detail.SUBS_NOT_FOUND:
+        if server_user_sub_names.detail == Detail.NOT_FOUND:
             await message.answer("У вас еще нет подписок, что-бы что-то удалять!")
         else:
             await message.answer("Проблемы с сервером!")
@@ -127,7 +127,7 @@ async def del_one_sub(message: types.Message, state: FSMContext):
     if server_response.ok:
         await message.answer(f"Подписка {message.text} была удалена!")
     else:
-        if server_response.detail == Detail.SUBS_NOT_FOUND:
+        if server_response.detail == Detail.NOT_FOUND:
             await message.answer(f"Подписки с таким именем не существует!")
         else:
             await message.answer("Неизвестная ошибка, попробуйте еще раз!")

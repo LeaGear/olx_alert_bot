@@ -13,7 +13,7 @@ class APIResponse(BaseModel, Generic[T]):
         return self.status == "success"
 
 class Detail:
-    SUBS_NOT_FOUND = "subs_not_found"
+    NOT_FOUND = "not_found"
     SERVER_DOWN = "server_down"
     INVALID_DATA = "invalid_data"
     SUB_ADDED = "sub_added_successfully"

@@ -7,3 +7,5 @@ data_store/users_subs_data.json
 *$py.class
 
 .DS_Store
+
+.idea
