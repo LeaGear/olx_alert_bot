@@ -5,19 +5,19 @@ from server.db.user_table import User
 from server.db.subscription_table import Subscription
 
 
-async def get_user_subs_by_id(db: AsyncSession, user_id: int):
-    db_user_id = select(User.id).where(User.telegram_id == user_id)
+async def get_user_subs_by_id(db: AsyncSession, user_db_id: int):
+    #db_user_id = select(User.id).where(User.telegram_id == user_id)
 
-    query = select(Subscription).where(Subscription.user_id == db_user_id)
+    query = select(Subscription).where(Subscription.user_id == user_db_id)
 
     result = await db.execute(query)
 
     return result.scalars().all()
 
 
-async def create_subscription(db: AsyncSession, user_id: int, name: str, url: str):
+async def create_subscription(db: AsyncSession, user_db_id: int, name: str, url: str):
     db_subscription = Subscription(
-        user_id=user_id,
+        user_id=user_db_id,
         name=name,
         url=url
     )

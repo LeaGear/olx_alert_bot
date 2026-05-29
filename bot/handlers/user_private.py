@@ -74,8 +74,8 @@ async def add_subscribe_url(message: types.Message, state: FSMContext):
     await state.update_data(sub_url=message.text)
 
     user_data = await state.get_data()  # Get all user data from FSM
-    user_id = message.from_user.id  # Getting user ID
-    response_status = await send_subscription_to_api(user_id, user_data.get("sub_name"), user_data.get("sub_url"))
+    user_telegram_id = message.from_user.id  # Getting user ID
+    response_status = await send_subscription_to_api(user_telegram_id, user_data.get("sub_name"), user_data.get("sub_url"))
 
     if response_status["detail"] == "add_success":
         await message.answer(f"Добавлена подписка: \n{user_data.get('sub_name')} | {user_data.get('sub_url')}")

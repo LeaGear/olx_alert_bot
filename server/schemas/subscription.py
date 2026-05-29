@@ -13,7 +13,7 @@ class SubscriptionResponse(BaseModel):
 
 
 class SubscriptionCreate(BaseModel):
-    user_id: int = Field(description="Telegram ID пользователя")
+    telegram_id: int = Field(description="Telegram ID пользователя")
     name: str = Field(description="Название подписки")
     url: str = Field(description="Ссылка на OLX с фильтрами или без")
     content: List[dict] = []

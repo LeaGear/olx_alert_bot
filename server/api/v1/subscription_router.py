@@ -17,10 +17,10 @@ router = APIRouter(
 #WAY - /subscriptions/add
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)) -> dict:
-    logging.error(sub_data)
-    await add_subscription_service(db, sub_data.user_id, sub_data.name, sub_data.url)
+    logging.error(f"SERVER GET DATA FOR ADDING ___+_++_+++_+_+_+_+_+_+_+     {sub_data}")
+    await add_subscription_service(db, sub_data.telegram_id, sub_data.name, sub_data.url)
 
-    print(f"New subscription created for {sub_data.user_id} with {sub_data.name} and url - {sub_data.url}")
+    print(f"New subscription created for {sub_data.telegram_id} with {sub_data.name} and url - {sub_data.url}")
 
     return {
         "status": "success",
@@ -30,7 +30,8 @@ async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)) -> 
 #WAY = /subscriptions/{telegram_id}
 @router.get("/{telegram_id}", response_model=List[SubscriptionResponse])
 async def get_user_subscriptions(telegram_id: int, db=Depends(get_db)) -> List[dict]:
-    subs = await subscription_crud.get_user_subs_by_id(db, telegram_id)
+    user_db_id = await user_crud.get_db_user_id(db, telegram_id)
+    subs = await subscription_crud.get_user_subs_by_id(db, user_db_id)
     return subs
 
 

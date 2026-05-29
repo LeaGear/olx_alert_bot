@@ -15,6 +15,7 @@ KEYBOARDS = {
 BACKEND_URL = "http://127.0.0.1:8000"
 
 API_VERSION = "/v1"
+
 API_COMMANDS = {
     "add_sub" : f"{API_VERSION}/subscriptions/add",
     "get_user_subs" : f"{API_VERSION}/subscriptions/{{}}",

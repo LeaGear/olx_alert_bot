@@ -20,7 +20,7 @@ def handle_network_errors(func):  # Handler for servers error
 @handle_network_errors
 async def send_subscription_to_api(user_id: int, name: str, url: str) -> dict | None:
     payload = {
-        "user_id": user_id,
+        "telegram_id": user_id,
         "name": name,
         "url": url
     }
