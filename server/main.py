@@ -1,13 +1,11 @@
-import logging
 
-from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from pydantic import BaseModel, Field, field_validator
-import re
-from typing import Optional, List
 
-from server.database import engine, Base, get_db
-from server import crud
+
+from server.db.database import engine
+from server.db.base import Base
+from server.api.base_router import main_router
 
 
 @asynccontextmanager
@@ -19,31 +17,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="OLX Alert API", lifespan=lifespan)
 
-
-class SubscriptionResponse(BaseModel):
-    name: str
-    url: str
-
-    class Config:
-        from_attributes = True
-
-
-class SubscriptionCreate(BaseModel):
-    user_id: int = Field(description="Telegram ID пользователя")
-    name: str = Field(description="Название подписки")
-    url: str = Field(description="Ссылка на OLX с фильтрами или без")
-    content: List[dict] = []
-    content_hash: Optional[str] = None
-
-    @field_validator("url")
-    @classmethod
-    def validate_olx_url(cls, v: str) -> str:
-        olx_pattern = r"^https?://(?:www\.)?olx\.ua/.*"
-
-        if not re.match(olx_pattern, v):
-            raise ValueError("Ссылка должна быть валидным URL-адресом платформы OLX.ua")
-
-        return v
+app.include_router(main_router)
 
 
 @app.get("/")
@@ -51,34 +25,4 @@ async def root():
     return {"message": "Server is up. Go working!"}
 
 
-@app.post("/add_subscription", status_code=status.HTTP_201_CREATED)
-async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)) -> dict:
-    user = await crud.get_user_by_id(db, sub_data.user_id)
-    if not user:
-        user = await crud.create_user(db, sub_data.user_id)
 
-    await crud.create_subscription(
-        db=db,
-        user_id=user.id,
-        name=sub_data.name,
-        url=sub_data.url
-    )
-    print(f"New subscription created for {sub_data.user_id} with {sub_data.name} and url - {sub_data.url}")
-
-    return {
-        "status": "success",
-        "detail": "add_success",
-    }
-
-
-@app.get("/users/{telegram_id}/subscriptions", response_model=List[SubscriptionResponse])
-async def get_user_subscriptions(telegram_id: int, db=Depends(get_db)) -> List[dict]:
-    subs = await crud.get_user_subs_by_id(db, telegram_id)
-    return subs
-
-
-@app.delete("/users/{telegram_id}/delete_subscription/{sub_name}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user_subscription(telegram_id: int, sub_name: str, db=Depends(get_db)):
-    db_response = await crud.delete_sub(db, telegram_id, sub_name)
-    if not db_response:
-        raise status.HTTP_404_NOT_FOUND

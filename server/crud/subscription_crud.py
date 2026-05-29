@@ -1,12 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from server.models.subscription import User, Subscription
 
-
-async def get_user_by_id(db: AsyncSession, user_id: int):
-    query = select(User).where(User.telegram_id == user_id)
-    result = await db.execute(query)
-    return result.scalar_one_or_none()
+from server.db.user_table import User
+from server.db.subscription_table import Subscription
 
 
 async def get_user_subs_by_id(db: AsyncSession, user_id: int):
@@ -17,14 +13,6 @@ async def get_user_subs_by_id(db: AsyncSession, user_id: int):
     result = await db.execute(query)
 
     return result.scalars().all()
-
-
-async def create_user(db: AsyncSession, user_id: int):
-    db_user = User(telegram_id=user_id)
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
 
 
 async def create_subscription(db: AsyncSession, user_id: int, name: str, url: str):
