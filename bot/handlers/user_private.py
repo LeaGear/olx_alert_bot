@@ -7,6 +7,7 @@ from aiogram.types import LinkPreviewOptions
 from bot.keyboards.reply import menu_keyboard, get_keyboard, back_to_menu_keyboard
 from bot.data.config import KEYBOARDS
 from bot.logic.api_client import send_subscription_to_api, get_user_subs, delete_user_sub
+from bot.schemas.api_response import Detail
 
 user_private_router = Router()
 
@@ -19,12 +20,12 @@ class AddSubscribe(StatesGroup):
 class DeleteSubscribe(StatesGroup):
     waiting_for_choice = State()
 
-async def send_main_menu(message: types.Message, state:FSMContext = None, text : str = "Главное меню: "):
+
+async def send_main_menu(message: types.Message, state: FSMContext = None, text: str = "Главное меню: "):
     if state and await state.get_state():  # If user have active state and in FSM route - clear it
         await state.clear()
 
     await message.answer(text, reply_markup=menu_keyboard)
-    #await message.delete()
 
 
 # START command
@@ -36,7 +37,6 @@ async def start_cmd(message: types.Message):
 # MENU button
 @user_private_router.message(F.text == KEYBOARDS["menu"])
 async def back_to_menu(message: types.Message, state: FSMContext):
-
     await send_main_menu(message, state)
 
 
@@ -44,16 +44,21 @@ async def back_to_menu(message: types.Message, state: FSMContext):
 @user_private_router.message(F.text == KEYBOARDS["my_subscribes"])
 async def my_subs(message: types.Message):
     sub_list = await get_user_subs(message.from_user.id)
-    if sub_list:
-        subs_message = "Ваши подписки: \n"
-        for sub in sub_list:
-            subs_message += f"{sub.get('name')} | {sub.get('url')}\n"
 
-        await message.answer(subs_message, link_preview_options=LinkPreviewOptions(is_disabled=True))
-    else:
-        await message.answer(f"У вас нет ни одной подписки!")
+    if not sub_list.ok:
+        if sub_list.detail == Detail.SUBS_NOT_FOUND:
+            await message.answer("У вас нет ни одной подписки!")
+        else:
+            await message.answer("Проблемы с сервером!")
+        await send_main_menu(message)
+        return
 
+    subs_message = "Ваши подписки: \n"
+    for sub in sub_list.data:
+        subs_message += f"{sub.get('name')} | {sub.get('url')}\n"
+    await message.answer(subs_message, link_preview_options=LinkPreviewOptions(is_disabled=True))
     await send_main_menu(message)
+
 
 # Open FSM route for add new subscribe with name and url
 @user_private_router.message(F.text == KEYBOARDS["add_subscribe"])
@@ -75,55 +80,59 @@ async def add_subscribe_url(message: types.Message, state: FSMContext):
 
     user_data = await state.get_data()  # Get all user data from FSM
     user_telegram_id = message.from_user.id  # Getting user ID
-    response_status = await send_subscription_to_api(user_telegram_id, user_data.get("sub_name"), user_data.get("sub_url"))
+    response_status = await send_subscription_to_api(user_telegram_id, user_data.get("sub_name"),
+                                                     user_data.get("sub_url"))
 
-    if response_status["detail"] == "add_success":
+    if response_status.ok:
         await message.answer(f"Добавлена подписка: \n{user_data.get('sub_name')} | {user_data.get('sub_url')}")
-    elif response_status["detail"] == "invalid_data":
-        await message.answer("Подписка не добавлена так как был отправлен неправильный URL")
-    elif response_status["detail"] == "server_down":
-        await message.answer("Напишите додику, что сервак - мертв")
+
     else:
-        await message.answer("Разраб обосрался - не воркает")
+        if response_status.detail == Detail.INVALID_DATA:
+            await message.answer("Подписка не добавлена так как был отправлен неправильный URL")
+        elif response_status.detail == Detail.SUBS_NOT_FOUND:
+            await message.answer("Напишите додику, что сервак - мертв")
+        else:
+            await message.answer("Разраб обосрался - не воркает")
 
     await send_main_menu(message, state)
-
 
 
 # DELETE subscribe button
 @user_private_router.message(F.text == KEYBOARDS["delete_subscribe"])
-async def delete_subs(message: types.Message, state: FSMContext):
+async def delete_sub(message: types.Message, state: FSMContext):
     server_user_sub_names = await get_user_subs(message.from_user.id)
-    #print(server_user_sub_names)
-    user_subs = [sub.get("name") for sub in server_user_sub_names]
 
-    # user_subs = await get_users_subscribe_names(message.from_user.id)
-    if not user_subs:
-        await message.answer("У вас еще нет подписок, что-бы что-то удалять!")
-        await message.answer(KEYBOARDS["menu"], reply_markup=menu_keyboard)
+    if server_user_sub_names.ok:
+        user_subs = [sub.get("name") for sub in server_user_sub_names.data]
+
+        await state.set_state(DeleteSubscribe.waiting_for_choice)
+
+        await message.answer("Какую подписку хотите удалить?",
+                             reply_markup=get_keyboard(user_subs, menu_button=KEYBOARDS["menu"],
+                                                       placeholder="Выберите одну из ваших подписок...."))
+    else:
+        if server_user_sub_names.detail == Detail.SUBS_NOT_FOUND:
+            await message.answer("У вас еще нет подписок, что-бы что-то удалять!")
+        else:
+            await message.answer("Проблемы с сервером!")
+        await send_main_menu(message, state)
         return
-
-    # await state.update_data(user_subs_names=user_subs)
-    await state.set_state(DeleteSubscribe.waiting_for_choice)
-
-    await message.answer("Какую подписку хотите удалить?",
-                         reply_markup=get_keyboard(user_subs, menu_button=KEYBOARDS["menu"],
-                                                   placeholder="Выберите одну из ваших подписок...."))
 
 
 @user_private_router.message(DeleteSubscribe.waiting_for_choice)
 async def del_one_sub(message: types.Message, state: FSMContext):
-    user_id = message.from_user.id
-    server_response = await delete_user_sub(user_id, message.text)
-    if server_response.get("detail") == "sub_deleted":
+    user_telegram_id = message.from_user.id
+    server_response = await delete_user_sub(user_telegram_id, message.text)
+
+    if server_response.ok:
         await message.answer(f"Подписка {message.text} была удалена!")
-    elif server_response.get("detail") == "sub_not_found":
-        await message.answer(f"Подписки с таким именем не существует!")
     else:
-        await message.answer("Неизвестная ошибка, попробуйте еще раз!")
+        if server_response.detail == Detail.SUBS_NOT_FOUND:
+            await message.answer(f"Подписки с таким именем не существует!")
+        else:
+            await message.answer("Неизвестная ошибка, попробуйте еще раз!")
 
     await send_main_menu(message, state)
-
 
 
 # PROPERTIES button
@@ -136,4 +145,3 @@ async def properties(message: types.Message):
 @user_private_router.message()
 async def input_error(message: types.Message):
     await message.answer("Упс... Что-то пошло не так! Назад в меню...", reply_markup=menu_keyboard)
-

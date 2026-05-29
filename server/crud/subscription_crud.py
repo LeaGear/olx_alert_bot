@@ -6,12 +6,9 @@ from server.db.subscription_table import Subscription
 
 
 async def get_user_subs_by_id(db: AsyncSession, user_db_id: int):
-    #db_user_id = select(User.id).where(User.telegram_id == user_id)
 
     query = select(Subscription).where(Subscription.user_id == user_db_id)
-
     result = await db.execute(query)
-
     return result.scalars().all()
 
 
@@ -27,10 +24,9 @@ async def create_subscription(db: AsyncSession, user_db_id: int, name: str, url:
     return db_subscription
 
 
-async def delete_sub(db: AsyncSession, telegram_id: int, sub_name: str):
-    db_user_id = select(User.id).where(User.telegram_id == telegram_id)
+async def delete_sub(db: AsyncSession, user_db_id: int, sub_name: str):
 
-    query = select(Subscription).where(Subscription.user_id == db_user_id, Subscription.name == sub_name)
+    query = select(Subscription).where(Subscription.user_id == user_db_id, Subscription.name == sub_name)
     result = await db.execute(query)
     sub = result.scalar_one_or_none()
 
