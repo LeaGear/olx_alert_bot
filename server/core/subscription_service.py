@@ -18,7 +18,9 @@ async def add_subscription_service(db, telegram_id : int, sub_name : str, sub_ur
     )
 
 async def delete_subscription_service(db, telegram_id : int, sub_name : str):
+    logging.error("WE HERE !!!!!!!!!")
     user_db_id = await user_crud.get_db_user_id(db, telegram_id)
+    logging.error(f"Now user db_id ----- {user_db_id} and sub_name ----- {sub_name}")
     return await subscription_crud.delete_sub(db, user_db_id, sub_name)
 
 async def get_users_subs_service(db, telegram_id : int):

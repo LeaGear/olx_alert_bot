@@ -44,6 +44,7 @@ async def delete_user_sub(user_id: int, sub_name: str) -> APIResponse[None]:
     async with httpx.AsyncClient() as client:
         url = f"{BACKEND_URL}{API_COMMANDS['delete_sub'].format(user_id, sub_name)}"
         response = await client.delete(url, timeout=SERVER_TIMEOUT)
+        print("api lcient - - -  -" , response.status_code)
 
         if response.status_code == 204:
             return APIResponse(status = "success", detail = Detail.SUB_DELETED)

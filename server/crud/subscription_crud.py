@@ -5,6 +5,17 @@ from sqlalchemy import select
 
 from server.db.subscription_table import Subscription
 
+async def update_subscriptions(db:AsyncSession, data_from_parser: List):
+    for sub_data in data_from_parser:
+        temp_data = select(Subscription).where(Subscription.id == sub_data.get('id'))
+        result = await db.execute(temp_data)
+        db_sub = result.scalar_one_or_none()
+
+        if db_sub:
+            db_sub.content = sub_data.get('content')
+            db_sub.content_hash = sub_data.get('content_hash')
+
+    await db.commit()
 
 async def get_all_subs(db: AsyncSession):
     query = select(Subscription)
