@@ -1,6 +1,6 @@
 
 .env
-data_store/users_subs_data.json
+parser/.env
 
 **/__pycache__/
 *.py[cod]

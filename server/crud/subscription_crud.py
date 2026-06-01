@@ -1,8 +1,16 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from server.db.user_table import User
 from server.db.subscription_table import Subscription
+
+
+async def get_all_subs(db: AsyncSession):
+    query = select(Subscription)
+    result = await db.execute(query)
+    db_all = result.scalars().all()
+    return db_all
 
 
 async def get_user_subs_by_id(db: AsyncSession, user_db_id: int):

@@ -14,6 +14,6 @@ class Subscription(Base):
     name: Mapped[str] = mapped_column(String(150))
     url: Mapped[str] = mapped_column(String(1000))
     content: Mapped[Optional[List]] = mapped_column(JSON, default=list)
-    content_hash: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    content_hash : Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="subscriptions")

@@ -1,18 +1,7 @@
 import httpx
-import functools
 
 from bot.data.config import BACKEND_URL, API_COMMANDS, SERVER_TIMEOUT
-from bot.schemas.api_response import APIResponse, Detail
-
-def handle_network_errors(func):  # Handler for servers error
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except (httpx.ConnectError, httpx.ConnectTimeout, httpx.TimeoutException) as e:
-            return APIResponse(status =  "error", detail =  Detail.SERVER_DOWN)
-
-    return wrapper
+from my_shared import APIResponse, Detail, handle_network_errors
 
 
 @handle_network_errors

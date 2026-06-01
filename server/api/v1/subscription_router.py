@@ -1,5 +1,3 @@
-import logging
-
 from fastapi import APIRouter, HTTPException, status, Depends
 
 from typing import List
@@ -24,7 +22,6 @@ async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)):
 @router.get("/{telegram_id}", response_model=List[SubscriptionResponse])
 async def get_user_subscriptions(telegram_id: int, db=Depends(get_db)) -> List[SubscriptionResponse]:
     subs = await get_users_subs_service(db, telegram_id)
-    logging.error(f"SUBS --=-=-=-=-==-=-=-=-={subs}")
     if subs:
         return subs
     else:
