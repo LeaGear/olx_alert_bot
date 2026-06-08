@@ -21,5 +21,5 @@ API_VERSION = "/v1"
 API_COMMANDS = {
     "add_sub" : API_VERSION + "/subscriptions/add",
     "get_user_subs" : API_VERSION + "/subscriptions/{}",
-    "delete_sub" : API_VERSION + "subscriptions/{}/delete/{}",
+    "delete_sub" : API_VERSION + "/subscriptions/{}/delete/{}",
 }

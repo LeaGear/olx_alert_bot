@@ -122,7 +122,6 @@ async def delete_sub(message: types.Message, state: FSMContext):
 async def del_one_sub(message: types.Message, state: FSMContext):
     user_telegram_id = message.from_user.id
     server_response = await delete_user_sub(user_telegram_id, message.text)
-    print(server_response)
     if server_response.ok:
         await message.answer(f"Подписка {message.text} была удалена!")
     else:
