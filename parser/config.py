@@ -3,6 +3,7 @@ import os
 
 BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
 
+REFRESH_INTERVAL = 2
 SERVER_TIMEOUT = 5
 API_VERSION = "/v1"
 
