@@ -1,38 +1,28 @@
 from typing import List
 
 
-async def find_diff(old:dict, new: dict) -> List[dict]:
-    '''print("-----"*30)
-    print(f"OLD OLD OLD:\n {old}\n")
-    print("-----"*30)
-
-    print(f"NEW NEW NEW:\n {new}\n")
-    print("-----"*30)'''
-
+async def find_diff(old: dict, new: dict) -> List[dict]:
+    a
     result = []
+    old_map = {item.get("id"): item.get("content") for item in old}
+
     for new_data in new:
         new_data_id = new_data.get("id")
-        new_data_user_id = new_data.get("user_id")
         new_data_content = new_data.get("content")
+        old_data_content = old_map.get(new_data_id)
 
-        for old_data in old:
-            print(f"{'========' * 20}\n{old_data}\n{'========' * 20}")
-            old_data_id = old_data.get("id")
-            if old_data_id == new_data_id:
-                old_data_content = old_data.get("content")
+        if old_data_content:
 
-                '''print("----" * 40)
-                print(f"OLD CONTENT \n{old_data_content}")
-                print("----" * 40)
-                print(f"NEW CONTENT \n{new_data_content}")
-                print("----" * 40)'''
+            old_set = {obj.get("name") for obj in old_data_content}  # set для быстрого поиска
+            unique_content = [obj for obj in new_data_content if obj.get("name") not in old_set]
+        else:
+            unique_content = new_data_content
 
-                if old_data_content:
-                    unique_content = [obj for obj in new_data_content if obj not in old_data_content]
-                else:
-                    unique_content = new_data_content
-                result.append({"user_id": new_data_user_id, "name": new_data.get("name"), "content": unique_content})
+        if unique_content:  # добавляем в result только если есть новое
+            result.append({
+                "user_id": new_data.get("user_id"),
+                "name": new_data.get("name"),
+                "content": unique_content
+            })
 
-
-    print(f"RESULT RESULT RESULT ------ {result}")
     return result
