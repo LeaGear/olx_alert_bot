@@ -23,3 +23,11 @@ async def create_user(db: AsyncSession, user_id: int):
     await db.commit()
     await db.refresh(db_user)
     return db_user
+
+
+async def get_users_ids(db: AsyncSession) -> dict[int, int]:
+    query = select(User.id, User.telegram_id)
+    result = await db.execute(query)
+    rows = result.all()
+
+    return {row.id: row.telegram_id for row in rows}

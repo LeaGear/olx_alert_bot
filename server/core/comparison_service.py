@@ -1,8 +1,7 @@
 from typing import List
 
 
-async def find_diff(old: dict, new: dict) -> List[dict]:
-    a
+async def find_diff(old: List[dict], new: List[dict]) -> List[dict]:
     result = []
     old_map = {item.get("id"): item.get("content") for item in old}
 
