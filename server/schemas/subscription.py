@@ -28,3 +28,16 @@ class SubscriptionCreate(BaseModel):
             raise ValueError("Ссылка должна быть валидным URL-адресом платформы OLX.ua")
 
         return v
+
+
+class SubscriptionData(BaseModel):
+    id: int
+    user_id: int
+    name: str
+    url: str
+    content: Optional[List] = None
+    content_hash: Optional[str] = None
+
+
+    class Config:
+        from_attributes = True
