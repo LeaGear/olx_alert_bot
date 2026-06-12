@@ -9,3 +9,5 @@ parser/.env
 .DS_Store
 
 .idea
+
+saved_file.txt

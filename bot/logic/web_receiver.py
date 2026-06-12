@@ -10,7 +10,10 @@ def create_app(bot):
             last_announcement = obj.get('content')[0]
             all_announs = len(obj.get('content')) + 1
             message = build_message(sub_name, last_announcement, all_announs)
+            print(f"Sending message to user - {obj.get('user_id')}---------->>>>>>: \n{message}\n")
             await bot.send_message(chat_id=obj.get("user_id"), text=message)
+            print(f"Message '{message}' sent complete \n{'---' * 20}")
+
 
         return web.Response(text="ok")
 

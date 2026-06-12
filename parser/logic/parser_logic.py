@@ -51,12 +51,16 @@ def parser(data_list_for_parsing):
         url = subs.get("url")
         print(f'Parsing - - - {url}')
         response = httpx.get(url, headers=HEADERS)  # Add status log
-
+        #response = httpx.get(url)
+        print(f"RESPONSE STATUS - - - - {response.status_code}")
+        #print(f"RESPONSE TEXT - - - - {response.text}")
+        #with open("saved_file.txt", "w", encoding="utf-8") as file:
+        #    file.write(response.text)
         actual_content = group_cards_from_url_response(response.text)
         content_string = json.dumps(actual_content, sort_keys=True, ensure_ascii=False)
         content_hash = hashlib.md5(content_string.encode("utf-8")).hexdigest()
 
-        if content_hash == subs.get("content_hash"):
+        if content_hash == subs.get("content_hash") and subs.get("content"):
             continue
         else:
             subs["content"] = actual_content
