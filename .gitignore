@@ -1,9 +1,8 @@
 
-bot/.env
-parser/.env
-server/.env
-
+**/.env
 **/__pycache__/
+
+
 *.py[cod]
 *$py.class
 
