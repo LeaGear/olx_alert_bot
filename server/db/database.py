@@ -2,7 +2,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 
 from server.config import DATABASE_URL
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+#Connecting to database server(Postgres SQL)
+engine = create_async_engine(DATABASE_URL, echo=True) #echo for print sql-requests in console
 
 async_session = async_sessionmaker(
     bind = engine,
@@ -11,7 +12,7 @@ async_session = async_sessionmaker(
 )
 
 
-
+#Function for working with server requests
 async def get_db():
     async with async_session() as session:
         yield session

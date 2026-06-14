@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.db.base import Base
 
-
+#Subscription table schema
 class Subscription(Base):
     __tablename__ = "subscriptions"
 

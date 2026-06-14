@@ -17,7 +17,8 @@ class SubscriptionCreate(BaseModel):
     name: str = Field(description="Название подписки")
     url: str = Field(description="Ссылка на OLX с фильтрами или без")
     content: List[dict] = []
-    content_hash: Optional[str] = None
+    content_ids: List = []
+    new_content_ids: List = []
 
     @field_validator("url")
     @classmethod
@@ -29,15 +30,3 @@ class SubscriptionCreate(BaseModel):
 
         return v
 
-
-class SubscriptionData(BaseModel):
-    id: int
-    user_id: int
-    name: str
-    url: str
-    content: Optional[List] = None
-    content_hash: Optional[str] = None
-
-
-    class Config:
-        from_attributes = True

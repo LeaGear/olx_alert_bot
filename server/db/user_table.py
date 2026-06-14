@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.db.base import Base
 
+#Create user table schema
 class User(Base):
     __tablename__ = "users"
 

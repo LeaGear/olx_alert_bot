@@ -1,6 +1,5 @@
 from server.crud import subscription_crud
 from server.core import comparison_service, notification_service, id_replace_service
-from server.schemas.subscription import SubscriptionData
 
 
 async def get_all_users_subs_service(db):
@@ -9,13 +8,7 @@ async def get_all_users_subs_service(db):
 
 
 async def update_users_data_service(new_data, db):
-
     await subscription_crud.update_subscriptions(db, new_data)
-
     new_content = await comparison_service.get_only_new(new_data)
-
-    print(f"NEW DATA PRE TELEGRAM ID - -- - - --- -- -- -- >>>>>>\n {new_content}")
-
     new_content = await id_replace_service.replacer(db, new_content)
-    print(f"NEW DATA WITH TELEGRAM ID - -- - - --- -- -- -- >>>>>>\n {new_content}")
     await notification_service.notificator(new_content)

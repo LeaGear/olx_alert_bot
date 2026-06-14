@@ -1,0 +1,4 @@
+api_response_kit==0.1.0
+apscheduler==3.11.2
+beautifulsoup4==4.15.0
+httpx==0.28.1

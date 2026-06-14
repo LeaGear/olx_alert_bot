@@ -1,6 +1,6 @@
 import httpx
 
-from my_shared import APIResponse, Detail, handle_network_errors
+from response_kit import APIResponse, handle_network_errors
 from parser.config import BACKEND_URL, API_REQUESTS
 
 
@@ -18,6 +18,6 @@ async def post_updated_data(updated_data):
 
     async with httpx.AsyncClient() as client:
         url = f"{BACKEND_URL}{API_REQUESTS['post_subs']}"
-        response = await client.post(url, json=payload.model_dump())
+        await client.post(url, json=payload.model_dump())
 
     return APIResponse(status = "success")

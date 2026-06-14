@@ -7,6 +7,6 @@ from server.config import API_VERSION
 
 main_router = APIRouter()
 
-# Объединяем все роутеры под одну крышу
+# Connect all routers in one main
 main_router.include_router(subscription_router, prefix=API_VERSION)
 main_router.include_router(parser_router, prefix=API_VERSION)

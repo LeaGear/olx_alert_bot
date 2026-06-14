@@ -1,6 +1,7 @@
 
-.env
+bot/.env
 parser/.env
+server/.env
 
 **/__pycache__/
 *.py[cod]
@@ -10,4 +11,3 @@ parser/.env
 
 .idea
 
-saved_file.txt

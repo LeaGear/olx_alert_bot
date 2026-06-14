@@ -24,7 +24,6 @@ async def update_subscriptions(db: AsyncSession, data_from_parser: List):
             db_sub.new_content_ids = sub_data.get("new_content_ids")
             flag_modified(db_sub, "new_content_ids")
 
-
     await db.commit()
 
 

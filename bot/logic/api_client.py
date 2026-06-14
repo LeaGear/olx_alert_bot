@@ -1,7 +1,7 @@
 import httpx
 
-from bot.data.config import BACKEND_URL, API_COMMANDS, SERVER_TIMEOUT
-from my_shared import APIResponse, Detail, handle_network_errors
+from bot.config import BACKEND_URL, API_COMMANDS, SERVER_TIMEOUT
+from response_kit import APIResponse, Detail, handle_network_errors
 
 
 @handle_network_errors

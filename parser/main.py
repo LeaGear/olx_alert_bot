@@ -13,16 +13,12 @@ scheduler = AsyncIOScheduler()
 async def main_func_parser():
 
     actual_data = await get_all_users_from_server()
-    print("ACTUAL DATA __________", actual_data)
     updated_data = parser(actual_data)
-    print("UPDATED DATA __________", updated_data)
-    print("-" * 100)
     await post_updated_data(updated_data)
 
 
 async def main():
 
-    print("Starting parser")
     scheduler.add_job(main_func_parser, "interval", minutes=REFRESH_INTERVAL, next_run_time=datetime.now())
     scheduler.start()
 

@@ -1,8 +1,0 @@
-pyproject.toml
-my_shared/__init__.py
-my_shared/api_response.py
-my_shared.egg-info/PKG-INFO
-my_shared.egg-info/SOURCES.txt
-my_shared.egg-info/dependency_links.txt
-my_shared.egg-info/requires.txt
-my_shared.egg-info/top_level.txt

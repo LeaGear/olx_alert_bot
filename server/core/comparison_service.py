@@ -1,12 +1,10 @@
 from typing import List
 
 
-async def get_only_new(data) -> List[dict]:
+async def get_only_new(data: List[dict]) -> List[dict]:
     result = []
-    print(f"NEW DATA DATA DATA DATA !!!!!!!!!!!!!!!!!!!!!!!!!!\n\n{data}\n\n")
     for obj in data:
         temp = []
-        print(f"THIS OBJECT NOW WORK====================>>>>>>>>>>>>>>\n{obj}\n\n")
         ids_for_notify = obj.get("new_content_ids")
 
         for card in obj.get("content"):

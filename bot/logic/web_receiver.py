@@ -8,7 +8,7 @@ def create_app(bot):
         for obj in data:
             sub_name = obj.get('name')
             last_announcement = obj.get('content')[0]
-            all_new_announs = len(obj.get("content")) + 1
+            all_new_announs = len(obj.get("content"))
             message = build_message(sub_name, last_announcement, all_new_announs)
             print(f"Sending message to user - {obj.get('user_id')}---------->>>>>>: \n{message}\n")
             await bot.send_message(chat_id=obj.get("user_id"), text=message)

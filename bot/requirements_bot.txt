@@ -1,0 +1,4 @@
+api_response_kit==0.1.0
+aiogram==3.28.2
+aiohttp==3.13.5
+httpx==0.28.1

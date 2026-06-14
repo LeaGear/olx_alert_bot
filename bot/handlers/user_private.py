@@ -5,9 +5,9 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import LinkPreviewOptions
 
 from bot.keyboards.reply import menu_keyboard, get_keyboard, back_to_menu_keyboard
-from bot.data.config import KEYBOARDS
+from bot.config import KEYBOARDS
 from bot.logic.api_client import send_subscription_to_api, get_user_subs, delete_user_sub
-from my_shared.api_response import Detail
+from response_kit import Detail
 
 user_private_router = Router()
 
