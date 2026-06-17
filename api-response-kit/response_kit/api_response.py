@@ -1,16 +1,18 @@
 from typing import Generic, TypeVar, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 T = TypeVar("T")
 
+
 class APIResponse(BaseModel, Generic[T]):
-    status: str
-    detail: Optional[str] = None
-    data: Optional[T] = None
+    status: str = Field(description="Статус ответа сервера - успех/ошибка")
+    detail: Optional[str] = Field(default=None, description="Детали ошибки или успеха")
+    data: Optional[T] = Field(default=None, description="Переданные данные")
 
     @property
     def ok(self) -> bool:
         return self.status == "success"
+
 
 class Detail:
     NOT_FOUND = "not_found"

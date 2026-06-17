@@ -10,13 +10,13 @@ async def get_only_new(data: List[dict]) -> List[dict]:
         for card in obj.get("content"):
             if card.get("id") in ids_for_notify:
                 temp.append(card)
-
-        result.append(
-            {
-                "name": obj.get("name"),
-                "user_id": obj.get("user_id"),
-                "content": temp
-            }
-        )
+        if temp:
+            result.append(
+                {
+                    "name": obj.get("name"),
+                    "user_id": obj.get("user_id"),
+                    "content": temp
+                }
+            )
 
     return result

@@ -9,7 +9,7 @@ async def get_all_users_from_server():
     async with httpx.AsyncClient() as client:
         url = f"{BACKEND_URL}{API_REQUESTS['get_subs']}"
         response = await client.get(url)
-        return response.json()
+        return APIResponse(status="success", data=response.json())
 
 
 @handle_network_errors
