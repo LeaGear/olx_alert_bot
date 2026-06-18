@@ -1,7 +1,10 @@
 from aiohttp import web
+from response_kit import log_function
 
-
+@log_function
 def create_app(bot):
+
+    @log_function
     async def handle_notify(request):
         data = await request.json()
         for obj in data:
@@ -9,12 +12,11 @@ def create_app(bot):
             last_announcement = obj.get('content')[0]
             all_new_announs = len(obj.get("content"))
             message = build_message(sub_name, last_announcement, all_new_announs)
-            print(f"\n{'-----' * 20}\nSending message to user - {obj.get('user_id')}---------->>>>>>: \n{message}\n")
             await bot.send_message(chat_id=obj.get("user_id"), text=message)
-            print(f"Message sent complete \n{'-----' * 20}")
 
         return web.Response(text="ok")
 
+    @log_function
     def build_message(sub_name, last_announcement, all_announs) -> str:
         return (
             f"🔔 Новое в подписке '{sub_name}':\n"

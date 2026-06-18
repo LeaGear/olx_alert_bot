@@ -1,9 +1,9 @@
 import httpx
 
 from bot.config import BACKEND_URL, API_COMMANDS, SERVER_TIMEOUT
-from response_kit import APIResponse, Detail, handle_network_errors
+from response_kit import APIResponse, Detail, handle_network_errors, log_function
 
-
+@log_function
 @handle_network_errors
 async def send_subscription_to_api(user_id: int, name: str, url: str) -> APIResponse[None]:
     payload = {
@@ -24,7 +24,7 @@ async def send_subscription_to_api(user_id: int, name: str, url: str) -> APIResp
         else:
             return APIResponse(status = "error", detail = Detail.UNKNOWN)
 
-
+@log_function
 @handle_network_errors
 async def get_user_subs(user_id: int) -> APIResponse[list[dict]]:
     async with httpx.AsyncClient() as client:
@@ -37,7 +37,7 @@ async def get_user_subs(user_id: int) -> APIResponse[list[dict]]:
         else:
             return APIResponse(status = "error", detail = Detail.UNKNOWN)
 
-
+@log_function
 @handle_network_errors
 async def delete_user_sub(user_id: int, sub_name: str) -> APIResponse[None]:
     async with httpx.AsyncClient() as client:

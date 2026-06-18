@@ -10,3 +10,21 @@
 2026-06-18 13:58:15,109 - main_logger - INFO - Successfully finished function: main
 2026-06-18 13:59:37,597 - main_logger - INFO - Starting function: main with args - (), kwargs - {}
 2026-06-18 13:59:37,597 - main_logger - INFO - Successfully finished function: main
+2026-06-18 14:19:12,512 - main_logger - INFO - Starting function: main with args - (), kwargs - {}
+2026-06-18 14:19:12,512 - main_logger - INFO - Successfully finished function: main
+2026-06-18 14:19:12,512 - main_logger - INFO - Starting function: create_app with args - (<aiogram.client.bot.Bot object at 0x10974d940>,), kwargs - {}
+2026-06-18 14:19:12,512 - main_logger - INFO - Successfully finished function: create_app
+2026-06-18 14:19:19,964 - main_logger - INFO - Starting function: get_user_subs with args - (407189309,), kwargs - {}
+2026-06-18 14:19:19,964 - main_logger - INFO - Successfully finished function: get_user_subs
+2026-06-18 14:19:28,263 - main_logger - INFO - Starting function: get_user_subs with args - (407189309,), kwargs - {}
+2026-06-18 14:19:28,264 - main_logger - INFO - Successfully finished function: get_user_subs
+2026-06-18 14:19:36,277 - main_logger - INFO - Starting function: get_user_subs with args - (407189309,), kwargs - {}
+2026-06-18 14:19:36,278 - main_logger - INFO - Successfully finished function: get_user_subs
+2026-06-18 14:19:50,317 - main_logger - INFO - Starting function: handle_notify with args - (<Request POST /notify >,), kwargs - {}
+2026-06-18 14:19:50,318 - main_logger - INFO - Successfully finished function: handle_notify
+2026-06-18 14:21:50,505 - main_logger - INFO - Starting function: handle_notify with args - (<Request POST /notify >,), kwargs - {}
+2026-06-18 14:21:50,505 - main_logger - INFO - Successfully finished function: handle_notify
+2026-06-18 14:23:50,058 - main_logger - INFO - Starting function: handle_notify with args - (<Request POST /notify >,), kwargs - {}
+2026-06-18 14:23:50,058 - main_logger - INFO - Successfully finished function: handle_notify
+2026-06-18 14:23:50,059 - main_logger - INFO - Starting function: build_message with args - ('Lanos', {'name': '2011 год Daewoo Lanos/ЗАЗ СЕНС 1,3S / ГАЗ-БЕНЗИН/ 144 т.км пробег/ 1 хозяин/не крашен без ДТП/ возможен обмен на Мото', 'price': '62 856.32 грн.', 'link': 'https://www.olx.ua/d/uk/obyavlenie/2011-god-daewoo-lanos-zaz-sens-1-3s-gaz-benzin-144-t-km-probeg-1-hozyain-ne-krashen-bez-dtp-vozmozhen-obmen-na-moto-ID10I4yY.html?search_reason=search%7Corganic', 'id': '926636808'}, 3), kwargs - {}
+2026-06-18 14:23:50,059 - main_logger - INFO - Successfully finished function: build_message
