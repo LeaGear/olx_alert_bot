@@ -1,7 +1,5 @@
-
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-
 
 from server.db.database import engine
 from server.db.base import Base
@@ -23,6 +21,3 @@ app.include_router(main_router)
 @app.get("/")
 async def root():
     return {"message": "Server is up. Go working!"}
-
-
-

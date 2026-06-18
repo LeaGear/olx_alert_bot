@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 
 
-from response_kit import APIResponse
+from response_kit import APIResponse, log_function
 from server.db.database import get_db
 from server.core.parser_service import get_all_users_subs_service, update_users_data_service
 
@@ -12,6 +12,7 @@ router = APIRouter(
 
 
 # WAY - /{API_VERSION}/parser/update_users_subs
+@log_function
 @router.post("/update_users_subs", status_code=status.HTTP_200_OK)
 async def update_users_subs(new_data: APIResponse, db=Depends(get_db)):
     if new_data.ok:
@@ -21,6 +22,7 @@ async def update_users_subs(new_data: APIResponse, db=Depends(get_db)):
 
 
 # WAY - /{API_VERSION}/parser/get_all_users_subs
+@log_function
 @router.get("/get_all_users_subs", status_code=status.HTTP_200_OK)
 async def get_all_users_subs(db=Depends(get_db)):
     result = await get_all_users_subs_service(db)

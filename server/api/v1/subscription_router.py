@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 
 from typing import List
+from response_kit import log_function
 
 from server.db.database import get_db
 from server.schemas.subscription import SubscriptionCreate, SubscriptionResponse
@@ -12,6 +13,7 @@ router = APIRouter(
 )
 
 #WAY - /{API_VERSION}/subscriptions/add
+@log_function
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)):
 
@@ -19,6 +21,7 @@ async def add_subscription(sub_data: SubscriptionCreate, db=Depends(get_db)):
 
 
 #WAY = /{API_VERSION}/subscriptions/{telegram_id}
+@log_function
 @router.get("/{telegram_id}", response_model=List[SubscriptionResponse])
 async def get_user_subscriptions(telegram_id: int, db=Depends(get_db)) -> List[SubscriptionResponse]:
     subs = await get_users_subs_service(db, telegram_id)
@@ -29,6 +32,7 @@ async def get_user_subscriptions(telegram_id: int, db=Depends(get_db)) -> List[S
 
 
 #WAY /{API_VERSION}/subscriptions/{telegram_id}/delete/{sub_name}
+@log_function
 @router.delete("/{telegram_id}/delete/{sub_name}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user_subscription(telegram_id: int, sub_name: str, db=Depends(get_db)):
     response = await delete_subscription_service(db, telegram_id, sub_name)
