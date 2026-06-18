@@ -6,7 +6,8 @@ requires-python = ">=3.10"
 dependencies = [
     "pydantic",
     "httpx",
-    "colorlog"
+    "colorlog",
+    "asyncio"
 ]
 
 [build-system]

@@ -2,8 +2,9 @@ import httpx
 import time
 
 from bs4 import BeautifulSoup
-from parser.config import HEADERS
+from response_kit import log_function
 
+from parser.config import HEADERS
 
 def group_cards_from_url_response(cards):
     links_ads = []
@@ -26,13 +27,12 @@ def group_cards_from_url_response(cards):
             price = price_element.text.strip() if price_element else "No Price"
 
             links_ads.append({"name": title, "price": price, "link": link, "id": card_id})
-        except (AttributeError, KeyError, TypeError) as exp:
-            print(exp)
+        except (AttributeError, KeyError, TypeError):
             continue
 
     return links_ads
 
-
+@log_function
 def parser(data_list_for_parsing):
     parsed_data = []
     for subs in data_list_for_parsing:

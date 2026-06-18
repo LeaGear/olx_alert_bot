@@ -1,6 +1,6 @@
 import os
 import sys
-
+import asyncio
 import colorlog
 import functools
 import logging
@@ -42,14 +42,27 @@ if not logger.handlers:
     logger.addHandler(file_handler)
 
 def log_function(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        logger.info(f"Starting function: {func.__name__} with args - {args}, kwargs - {kwargs}")
-        try:
-            result = func(*args, **kwargs)
-            logger.info(f"Successfully finished function: {func.__name__}")
-            return result
-        except Exception as e:
-            logger.error(f"Critical error in function: {func.__name__}. Error: {e}", exc_info=True)
-            return None
-    return wrapper
+    if asyncio.iscoroutinefunction(func):
+        @functools.wraps(func)
+        async def wrapper(*args, **kwargs):
+            logger.info(f"Starting function: {func.__name__} with args - {args}, kwargs - {kwargs}")
+            try:
+                result = await func(*args, **kwargs)
+                logger.info(f"Successfully finished function: {func.__name__}")
+                return result
+            except Exception as e:
+                logger.error(f"Critical error in function: {func.__name__}. Error: {e}", exc_info=True)
+                return None
+        return wrapper
+    else:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            logger.info(f"Starting function: {func.__name__} with args - {args}, kwargs - {kwargs}")
+            try:
+                result = func(*args, **kwargs)
+                logger.info(f"Successfully finished function: {func.__name__}")
+                return result
+            except Exception as e:
+                logger.error(f"Critical error in function: {func.__name__}. Error: {e}", exc_info=True)
+                return None
+        return wrapper
