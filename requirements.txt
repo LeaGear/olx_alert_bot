@@ -1,10 +1,10 @@
-aiogram==3.28.2
-apscheduler==3.11.2
-fastapi==0.136.3
+aiogram
+apscheduler
+fastapi
 uvicorn[standard]
-pydantic==2.13.4
-SQLAlchemy==2.0.50
+pydantic
+SQLAlchemy
 asyncpg
-httpx==0.28.1
-beautifulsoup4==4.15.0
+httpx
+beautifulsoup4
 greenlet
