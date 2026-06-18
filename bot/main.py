@@ -6,15 +6,15 @@ from aiohttp import web
 from bot.config import TOKEN
 from bot.handlers.user_private import user_private_router
 from logic.web_receiver import create_app
+from response_kit import log_function
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 dp.include_router(user_private_router)
 
-
+@log_function
 async def main():
-
     app = create_app(bot)
     runner = web.AppRunner(app)
     await runner.setup()

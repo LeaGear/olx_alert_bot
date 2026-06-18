@@ -1,11 +1,12 @@
 [project]
 name = "api-response-kit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Shared schemas and utils for OLX Alert Bot"
 requires-python = ">=3.10"
 dependencies = [
-    "pydantic>=2.0",
-    "httpx"
+    "pydantic",
+    "httpx",
+    "colorlog"
 ]
 
 [build-system]
