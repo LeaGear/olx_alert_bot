@@ -33,7 +33,6 @@ def group_cards_from_url_response(cards):
             location = location_date.text.strip() if location_date else "No Location"
 
             img_element = card.find("img")
-
             if img_element:
                 srcset = img_element.get("srcset")
                 if srcset:
