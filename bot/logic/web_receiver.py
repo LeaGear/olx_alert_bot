@@ -47,10 +47,10 @@ def create_app(bot):
     @log_function
     def build_message(sub_name, last_announcement) -> str:
         return (
-            f"🔔 **Новое в подписке:** '{sub_name}'\n\n"
-            f"📌 {last_announcement.get('name')}\n"
-            f"💰 Цена: {last_announcement.get('price')}\n"
-            f"📍 Локация: {last_announcement.get('location', 'Не указана')}"
+            f"🔔 **Новое в подписке:** '{sub_name} 🔔'\n\n"
+            f"📌 {last_announcement.get('name')} 📌\n\n"
+            f"💰 {last_announcement.get('price')} 💰\n\n"
+            f"📍 {last_announcement.get('location', 'Не указана')} 📍"
         )
 
     app = web.Application()
