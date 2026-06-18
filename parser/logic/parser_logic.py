@@ -6,11 +6,14 @@ from response_kit import logger
 
 from parser.config import HEADERS
 
+
 def group_cards_from_url_response(cards):
     links_ads = []
 
     for card in cards:
         try:
+            photo_url = "No Photo"
+
             card_id = card.get("id")
 
             title_element = card.find("h6") or card.find("h3") or card.find("h4")
@@ -26,11 +29,25 @@ def group_cards_from_url_response(cards):
             price_element = card.find(attrs={"data-testid": "ad-price"})
             price = price_element.text.strip() if price_element else "No Price"
 
-            links_ads.append({"name": title, "price": price, "link": link, "id": card_id})
+            location_date = card.find(attrs={"data-testid": "location-date"})
+            location = location_date.text.strip() if location_date else "No Location"
+
+            img_element = card.find("img")
+
+            if img_element:
+                srcset = img_element.get("srcset")
+                if srcset:
+                    photo_url = srcset.split(",")[-1].strip().split(" ")[0]
+                else:
+                    photo_url = img_element.get("src") or "No Photo"
+
+            links_ads.append(
+                {"name": title, "image": photo_url, "location": location, "price": price, "link": link, "id": card_id})
         except (AttributeError, KeyError, TypeError):
             continue
 
     return links_ads
+
 
 def parser(data_list_for_parsing):
     logger.info("Starting function - <<parser>>")
@@ -48,7 +65,8 @@ def parser(data_list_for_parsing):
             soup = BeautifulSoup(response.text, "lxml")
             main_grid = soup.find("div", {"data-testid": "listing-grid"})
             cards = main_grid.find_all("div", {"data-cy": "l-card"}) if main_grid else soup.find_all("div",
-                                                                                                     {"data-cy": "l-card"})
+                                                                                                     {
+                                                                                                         "data-cy": "l-card"})
             new_content_ids = [card.get("id") for card in cards if card.get("id")]
             content_difference = list(set(new_content_ids) - set(old_db_ids))
 
