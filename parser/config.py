@@ -48,3 +48,5 @@ HEADERS = {
 }
 
 QUERY_PARAMS = "search%5Border%5D=created_at:desc"
+
+TIME_DIFFERENCE = 3

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from response_kit import logger
 
 from parser.config import HEADERS
-
+from parser.logic.time_fix import fix_olx_server_time
 
 def group_cards_from_url_response(cards):
     links_ads = []
@@ -31,6 +31,7 @@ def group_cards_from_url_response(cards):
 
             location_date = card.find(attrs={"data-testid": "location-date"})
             location = location_date.text.strip() if location_date else "No Location"
+            location = fix_olx_server_time(location)
 
             img_element = card.find("img")
             if img_element:
@@ -63,9 +64,16 @@ def parser(data_list_for_parsing):
 
             soup = BeautifulSoup(response.text, "lxml")
             main_grid = soup.find("div", {"data-testid": "listing-grid"})
-            cards = main_grid.find_all("div", {"data-cy": "l-card"}) if main_grid else soup.find_all("div",
-                                                                                                     {
-                                                                                                         "data-cy": "l-card"})
+
+            if main_grid:
+                separator = main_grid.find("div", {"data-cy": "baxter-slot-div-gpt-liting-after-promoted"})
+                if separator:
+                    cards = separator.find_next_siblings("div", {"data-cy": "l-card"})
+                else:
+                    cards = main_grid.find_all("div", {"data-cy": "l-card"})
+            else:
+                cards = soup.find_all("div", {"data-cy": "l-card"})
+
             new_content_ids = [card.get("id") for card in cards if card.get("id")]
             content_difference = list(set(new_content_ids) - set(old_db_ids))
 
