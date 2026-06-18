@@ -42,10 +42,31 @@ if not logger.handlers:
     logger.addHandler(file_handler)
 
 def log_function(func):
+
+    #function to dave space in logs
+    def clean_arg(arg):
+        if isinstance(arg, dict):
+            if len(arg) > 5:
+                return f"[Dict with {len(arg)} keys (hidden to save space)]"
+            return arg
+        elif isinstance(arg, list):
+            if len(arg) > 5:
+                return f"[List with {len(arg)} items (hidden to save space)]"
+            return arg
+        elif isinstance(arg, str) and len(arg) > 200:
+            return f"{arg[:100]}... [Truncated, total length: {len(arg)}]"
+        return arg
+
+    #Check for async or sync function
     if asyncio.iscoroutinefunction(func):
+
+        #Handler if async function
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
-            logger.info(f"Starting function - <<{func.__name__}>> with args - {args}, kwargs - {kwargs}")
+            cleaned_args = [clean_arg(a) for a in args]
+            cleaned_kwargs = {k: clean_arg(v) for k, v in kwargs.items()}
+
+            logger.info(f"Starting function - <<{func.__name__}>> with args - {cleaned_args}, kwargs - {cleaned_kwargs}")
             try:
                 result = await func(*args, **kwargs)
                 logger.info(f"Successfully finished function - <<{func.__name__}>>")
@@ -55,9 +76,13 @@ def log_function(func):
                 return None
         return wrapper
     else:
+        #HAndler if function - sync
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            logger.info(f"Starting function - <<{func.__name__}>> with args - {args}, kwargs - {kwargs}")
+            cleaned_args = [clean_arg(a) for a in args]
+            cleaned_kwargs = {k: clean_arg(v) for k, v in kwargs.items()}
+
+            logger.info(f"Starting function - <<{func.__name__}>> with args - {cleaned_args}, kwargs - {cleaned_kwargs}")
             try:
                 result = func(*args, **kwargs)
                 logger.info(f"Successfully finished function - <<{func.__name__}>>")

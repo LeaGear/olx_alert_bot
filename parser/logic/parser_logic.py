@@ -2,7 +2,7 @@ import httpx
 import time
 
 from bs4 import BeautifulSoup
-from response_kit import log_function
+from response_kit import logger
 
 from parser.config import HEADERS
 
@@ -32,30 +32,36 @@ def group_cards_from_url_response(cards):
 
     return links_ads
 
-@log_function
 def parser(data_list_for_parsing):
-    parsed_data = []
-    for subs in data_list_for_parsing:
-        time.sleep(1)
-        url = subs.get("url")
-        old_db_ids = subs.get("content_ids")
-        response = httpx.get(url, headers=HEADERS)  # Add status log
+    logger.info("Starting function - <<parser>>")
+    try:
+        parsed_data = []
+        for subs in data_list_for_parsing:
+            time.sleep(1)
+            url = subs.get("url")
+            old_db_ids = subs.get("content_ids")
+            response = httpx.get(url, headers=HEADERS)  # Add status log
+            if response.status_code != 200:
+                logger.warning(f"OLX return  status code - >{response.status_code}< for URL: {url}")
+                continue
 
-        soup = BeautifulSoup(response.text, "lxml")
-        main_grid = soup.find("div", {"data-testid": "listing-grid"})
-        cards = main_grid.find_all("div", {"data-cy": "l-card"}) if main_grid else soup.find_all("div",
-                                                                                                 {"data-cy": "l-card"})
-        new_content_ids = [card.get("id") for card in cards]
-        content_difference = list(set(new_content_ids) - set(old_db_ids))
+            soup = BeautifulSoup(response.text, "lxml")
+            main_grid = soup.find("div", {"data-testid": "listing-grid"})
+            cards = main_grid.find_all("div", {"data-cy": "l-card"}) if main_grid else soup.find_all("div",
+                                                                                                     {"data-cy": "l-card"})
+            new_content_ids = [card.get("id") for card in cards if card.get("id")]
+            content_difference = list(set(new_content_ids) - set(old_db_ids))
 
-        actual_content = group_cards_from_url_response(cards)
+            actual_content = group_cards_from_url_response(cards)
 
-        if content_difference:
-            subs["content"] = actual_content
-            subs["content_ids"] = new_content_ids
-            subs["new_content_ids"] = content_difference
-            parsed_data.append(subs)
-        else:
-            continue
-
-    return parsed_data
+            if content_difference:
+                subs["content"] = actual_content
+                subs["content_ids"] = new_content_ids
+                subs["new_content_ids"] = content_difference
+                parsed_data.append(subs)
+            else:
+                continue
+        logger.info(f"Finished function - <<parser>>")
+        return parsed_data
+    except Exception as e:
+        logger.error(f"Function - <<parser>> not completed with ERROR - {e}", exc_info=True)
