@@ -27,5 +27,5 @@ async def update_users_data_service(new_data, db):
         return APIResponse(status="success")
 
     except Exception as e:
-        logger.error(f"Comparison failed - ERROR - >{e}<", exc_info=True)
+        logger.error(f"Update and notifications users function is FAILED - ERROR - >{e}<", exc_info=True)
         return APIResponse(status="error")
