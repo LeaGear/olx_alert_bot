@@ -4,8 +4,17 @@ import asyncio
 import colorlog
 import functools
 import logging
+import pytz
+
+from datetime import datetime
 
 from logging.handlers import RotatingFileHandler
+
+kyiv_tz = pytz.timezone("Europe/Kyiv")
+
+def format_time(record, datefmt=None):
+    ct = datetime.fromtimestamp(record.created, tz=kyiv_tz)
+    return ct.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
 
 
 os.makedirs("logs", exist_ok=True)
@@ -29,6 +38,7 @@ if not logger.handlers:
 
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(console_formatter)
+    console_formatter.formatTime = format_time
     logger.addHandler(console_handler)
 
     file_handler = RotatingFileHandler(
@@ -39,7 +49,9 @@ if not logger.handlers:
     )
 
     file_handler.setFormatter(file_formatter)
+    file_formatter.formatTime = format_time
     logger.addHandler(file_handler)
+
 
 def log_function(func):
 
@@ -91,3 +103,4 @@ def log_function(func):
                 logger.error(f"Critical error in function - <<{func.__name__}>>. Error: {e}", exc_info=True)
                 return None
         return wrapper
+
