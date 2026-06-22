@@ -7,6 +7,7 @@ from response_kit import logger
 from parser.config import HEADERS
 from parser.logic.time_fix import fix_olx_server_time
 
+
 def group_cards_from_url_response(cards):
     links_ads = []
 
@@ -44,6 +45,7 @@ def group_cards_from_url_response(cards):
             links_ads.append(
                 {"name": title, "image": photo_url, "location": location, "price": price, "link": link, "id": card_id})
         except (AttributeError, KeyError, TypeError):
+            logger.error(f"Error in function - <<group_cards_from_url_response>> - - - - ", exc_info=True)
             continue
 
     return links_ads
@@ -57,7 +59,20 @@ def parser(data_list_for_parsing):
             time.sleep(1)
             url = subs.get("url")
             old_db_ids = subs.get("content_ids")
-            response = httpx.get(url, headers=HEADERS)  # Add status log
+
+            try:
+                response = httpx.get(url, headers=HEADERS, timeout=15)
+                response.raise_for_status()
+            except httpx.ReadTimeout:
+                logger.error("Сервер OLX слишком долго не отвечал (Timeout). Пропускаем этот шаг или пробуем позже.")
+                continue
+            except httpx.HTTPStatusError as e:
+                logger.error(f"OLX вернул ошибку кода: {e.response.status_code}")
+                continue
+            except Exception as e:
+                logger.error(f"Непредвиденная ошибка при запросе: {e}")
+                continue
+
             if response.status_code != 200:
                 logger.warning(f"OLX return  status code - >{response.status_code}< for URL: {url}")
                 continue
@@ -86,7 +101,10 @@ def parser(data_list_for_parsing):
                 parsed_data.append(subs)
             else:
                 continue
+
         logger.info(f"Finished function - <<parser>>")
+
         return parsed_data
+
     except Exception as e:
         logger.error(f"Function - <<parser>> not completed with ERROR - {e}", exc_info=True)

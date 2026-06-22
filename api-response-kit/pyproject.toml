@@ -7,7 +7,8 @@ dependencies = [
     "pydantic",
     "httpx",
     "colorlog",
-    "asyncio"
+    "asyncio",
+    "pytz"
 ]
 
 [build-system]
