@@ -64,17 +64,17 @@ def parser(data_list_for_parsing):
                 response = httpx.get(url, headers=HEADERS, timeout=15)
                 response.raise_for_status()
             except httpx.ReadTimeout:
-                logger.error("Сервер OLX слишком долго не отвечал (Timeout). Пропускаем этот шаг или пробуем позже.")
+                logger.error("OLX server timed out - continue")
                 continue
             except httpx.HTTPStatusError as e:
-                logger.error(f"OLX вернул ошибку кода: {e.response.status_code}")
+                logger.error(f"OLX return code error: {e.response.status_code}")
                 continue
             except Exception as e:
-                logger.error(f"Непредвиденная ошибка при запросе: {e}")
+                logger.error(f"Unexpected error: {e}")
                 continue
 
             if response.status_code != 200:
-                logger.warning(f"OLX return  status code - >{response.status_code}< for URL: {url}")
+                logger.warning(f"OLX return status code - >{response.status_code}< for URL: {url}")
                 continue
 
             soup = BeautifulSoup(response.text, "lxml")

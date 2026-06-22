@@ -14,8 +14,11 @@ scheduler = AsyncIOScheduler()
 @log_function
 async def main_func_parser():
     actual_data = await get_all_users_from_server()
-    updated_data = parser(actual_data.data)
-    await post_updated_data(updated_data)
+    if actual_data:
+        updated_data = parser(actual_data.data)
+        await post_updated_data(updated_data)
+    else:
+        logger.warning("Function - <<main_func_parser>> in main function received empty data. Parser skipped")
 
 @log_function
 async def main():

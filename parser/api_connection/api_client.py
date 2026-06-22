@@ -22,5 +22,6 @@ async def post_updated_data(updated_data):
             await client.post(url, json=payload.model_dump())
         logger.info("Function - <<post_updated_data>> finished successfully")
         return APIResponse(status = "success")
+
     except Exception as e:
-        logger.error(f"Function - <<post_updated_data>> failed due to {e}")
+        logger.error(f"Function - <<post_updated_data>> failed due to {e}", exc_info=True)
